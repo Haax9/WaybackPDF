@@ -3,7 +3,7 @@
 ## Description
 
 Small python tool used to recover and download archived PDF files for a given domain name. It uses the "Wayback Machine" from archive.org.
-This tool is based on this <a href="https://openfacto.fr/2020/04/19/recuperer-des-fichiers-pdf-en-masse-sur-archive-org/" target="_blank" rel="noopener">OpenFacto research</a> and heavily inspired by <a href="https://twitter.com/yannguegan" target="_blank" rel="noopener">@yannguegan's</a> work. His first uploaded script it not reacheable anymore and was lacking some verifications on the gathered files, causing errors. These are the two reasons I recoded the tool and uploaded it.
+This tool is based on this <a href="https://openfacto.fr/2020/04/19/recuperer-des-fichiers-pdf-en-masse-sur-archive-org/" target="_blank" rel="noopener">OpenFacto research</a> and heavily inspired by <a href="https://twitter.com/yannguegan" target="_blank" rel="noopener">@yannguegan's</a> work. His first uploaded script is not reacheable anymore and was lacking some verifications on the gathered files, causing errors. These are the two reasons I recoded the tool and uploaded it.
 
 
 ## Prerequisite
