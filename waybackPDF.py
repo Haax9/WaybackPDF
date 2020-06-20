@@ -35,6 +35,9 @@ def parse_arguments():
                         required=False,
                         help='Use HTTP instead of HTTPS for the target domain.'
                         ' The default behavior uses HTTPS')
+    parser.add_argument('-r', '--resume', type=int, action='store', required=False,
+                        help='Start downloading at a given index and skip X previous'
+                        ' files')
 
     args = parser.parse_args()
     return args
@@ -82,26 +85,33 @@ def getPDFlist(domain, protocol):
         if ".pdf" in name:
             name = name.rsplit(".", 1)    
 
-        pdf['name'] = name[0] + '-' + pdf['timestamp'] + '.pdf'
+        pdf['name'] = name[0] + '-' + pdf['timestamp']
 
     print(PC.note_box + "{} PDFs found".format(len(pdfs)))
     return pdfs
 
 
-def downloadFiles(domain, pdfs, output):
-    
+def downloadFiles(domain, pdfs, output, resume):
     # If needed, create directory
     if not os.path.exists(output):
         os.makedirs(output)
 
     print("\n" + PC.ok_box + "Downloading Files...")
 
-    # Downloading and saving files    
-    for p,pdf in enumerate(pdfs):
-        with open(output + '/' + pdf['name'],'wb') as file:
+    # Checking if resume switch is on
+    if resume:
+        print("\n" + PC.ok_box + "Resume switch on, skipping the first {} file(s)".format(resume))
+        pdfs = pdfs[resume:]
+
+    # Downloading and saving files
+    for p,pdf in enumerate(pdfs): 
+        outputDir = output + '/'
+        fileName = pdf['name'][:250] + '.pdf'
+        filePath = os.path.join(outputDir, fileName)
+        with open(filePath,'wb') as file:
             data = requests.get(pdf['wayback'])
             file.write(data.content)
-        print(PC.note_box + "({}/{}) Saved {}".format(p+1, len(pdfs),pdf['name']))
+        print(PC.note_box + "({}/{}) Saved {}.pdf".format(p+1, len(pdfs),pdf['name']))
 
 
 def main():
@@ -116,13 +126,12 @@ def main():
     print("\n" + PC.note_box + "Web Archive PDF Downloader ")
     print(PC.note_box + "Target domain : " + args.domain)
     print(PC.note_box + "Output directory : {}/".format(outputDir))
-    #print(PC.note_box + "Output directory : {}/{}/".format(os.path.split(os.getcwd())[1],args.domain))
 
     # Getting the PDF list
     pdfList = getPDFlist(args.domain, args.http)
 
     # Downloading PDF
-    downloadFiles(args.domain, pdfList, outputDir)
+    downloadFiles(args.domain, pdfList, outputDir, args.resume)
 
     print("\n" + PC.ok_box + "Everything's done !")
     print(PC.ok_box + "Happy analysis !\n")
